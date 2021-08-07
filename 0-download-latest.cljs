@@ -1,9 +1,12 @@
 (ns dl
   (:require
     ["node-fetch" :as fetch]
-    ["fs" :as fs]))
+    ["fs" :as fs]
+    ["mkdirp" :as mkdirp]))
 
 (def fresh-pins-url "https://api.pinterest.com/v3/pidgets/boards/chrismgamedraw/retro-computing/pins/")
+
+(mkdirp "data")
 
 (-> (fetch fresh-pins-url)
     (.then #(.json %))
