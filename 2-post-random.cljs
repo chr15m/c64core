@@ -76,3 +76,7 @@
         (print)))
 
 (main!)
+
+(js/setTimeout
+  #(print "Done.")
+  (* (js/Math.random) 16 60 60 1000))
