@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "@keyv/sqlite": "^2.0.2",
+    "@keyv/sqlite": "2.0.2",
     "keyv": "^4.0.3",
-    "mkdirp": "^1.0.4",
+    "mkdirp": "1.0.4",
     "nbb": "0.0.30",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "2.6.1",
     "sqlite3": "^4.2.0",
-    "twitter-api-v2": "^1.2.0"
+    "twitter-api-v2": "1.2.0"
   }
 }
