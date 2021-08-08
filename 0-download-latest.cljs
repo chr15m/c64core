@@ -3,11 +3,13 @@
     ["node-fetch" :as fetch]
     ["fs" :as fs]
     ["mkdirp" :as mkdirp]
-    [common :refer [log]]))
+    [common :refer [log env bail]]))
 
 (def n "0-download-latest.cljs:")
 
-(def fresh-pins-url "https://api.pinterest.com/v3/pidgets/boards/chrismgamedraw/retro-computing/pins/")
+(def board (or (env "PINTEREST_BOARD") (bail "PINTEREST_BOARD is not set.")))
+
+(def fresh-pins-url (str "https://api.pinterest.com/v3/pidgets/boards/" board "/pins/"))
 
 (mkdirp "data")
 
