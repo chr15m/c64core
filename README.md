@@ -1,6 +1,6 @@
 This bot runs https://twitter.com/c64core
 
-It is build with [nbb](https://github.com/borkdude/nbb).
+It is built with [nbb](https://github.com/borkdude/nbb).
 
 It is deployed with [Piku](https://piku.github.io/).
 
