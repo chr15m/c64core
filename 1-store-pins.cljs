@@ -6,12 +6,6 @@
 
 (def n "1-store-pins.cljs:")
 
-; https://api.pinterest.com/v3/pidgets/users/chrismgamedraw/pins/
-; https://api.pinterest.com/v3/pidgets/boards/chrismgamedraw/retro-computing/pins/
-; https://api.pinterest.com/v3/pidgets/sections/chrismgamedraw/retro-computing/retro-watches/pins/
-
-; #js {:description Approaching Lacaille 8760-2 &#128165; video gif animation future ux ui explore exploration design interface space, :link https://dribbble.com/shots/4128271-Approaching-Lacaille-8760-2, :aggregated_pin_data #js {:aggregated_stats #js {:saves 9835, :done 0}}, :domain dribbble.com, :native_creator nil, :id 727190671070208399, :is_video false, :embed #js {:src https://i.pinimg.com/originals/51/9a/10/519a10f30f71d4053f13d44146a746a1.gif, :height 300, :width 400, :type gif}, :repin_count 0, :pinner #js {:follower_count 20, :about , :pin_count 2118, :full_name Chrism+gamedraw, :id 727190808490541556, :location , :profile_url https://www.pinterest.com/chrismgamedraw/, :image_small_url https://s.pinimg.com/images/user/default_60.png}, :attribution nil, :story_pin_data nil, :dominant_color #1d1d1f, :images #js {237x #js {:width 237, :height 177, :url https://i.pinimg.com/237x/51/9a/10/519a10f30f71d4053f13d44146a746a1.jpg}, 564x #js {:width 400, :height 300, :url https://i.pinimg.com/564x/51/9a/10/519a10f30f71d4053f13d44146a746a1.jpg}}}
-
 (defn hash-str [s]
   (-> (crypto/createHash "sha256") (.update s) (.digest "hex")))
 
