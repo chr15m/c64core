@@ -3,14 +3,21 @@
     ["path" :as path]
     ["node-fetch" :as fetch]
     ["twitter-api-v2/dist" :refer [TwitterApi]]
-    [common :refer [log plet env client kv get-pin-image]]))
+    [common :refer [log bail plet env client kv get-pin-image]]))
 
 (def n "2-post-random.cljs:")
 
 (def tw-keys {:appKey (env "TWITTER_API_APP_KEY")
               :appSecret (env "TWITTER_API_APP_SECRET")
               :accessToken (env "TWITTER_API_ACCESS_TOKEN")
-              :accessSecret (env "TWITTER_API_TOKEN_SECRET")})
+              :accessSecret (env "TWITTER_API_ACCESS_SECRET")})
+
+(doseq [[k v] tw-keys]
+  (when (nil? v)
+    (let [n (-> k name (.replace ":" "") (.replace #"([A-Z])" "_$1") .toUpperCase)]
+    (bail (str "TWITTER_API_" n " is not set")))))
+
+; TODO: check when the last tweet was and wait min-hours
 
 (defn main! []
   (log n "main!")
@@ -45,17 +52,15 @@
          _ (log n "Update database.")
          update-posted (.set posted pin-hash (clj->js {:tweet tweet :pin pin-data :img pin-image :link pin-link}))
          update-pins (.delete pins pin-hash)]
-        
+
         (log n "Posted")
         (log n "Hash:" pin-hash)
         (log n pin-image)
         (log n pin-link)
         (log n (aget res "ok"))
-        (print)
-        
         ;(print "Tweet:" tweet)
         ;(print pin-data)
-        ))
+        (print)))
 
 (main!)
 
