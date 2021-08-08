@@ -66,7 +66,7 @@
 
 (let [wait-ms (* (js/Math.random) 16 60 60 1000)
       wait-hrs (/ wait-ms (* 1000 60 60))]
-  (log n "Wil wait" (js/Math.round wait-hrs) "hours to re-run.")
+  (log n "Will wait" (js/Math.round wait-hrs) "hours to re-run.")
   (js/setTimeout
     #(log n "Exiting.")
     wait-ms))
