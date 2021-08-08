@@ -2,7 +2,7 @@
   (:require
     ["fs" :as fs]
     ["crypto" :as crypto]
-    [common :refer [log kv plet get-pin-image]]))
+    [common :refer [log kv client plet get-pin-image]]))
 
 (def n "1-store-pins.cljs:")
 
@@ -48,9 +48,19 @@
                   (.all js/Promise (to-array promises))))
               files)))))
 
+(defn count-pins [db prefix]
+  (plet [q (.query db (str "select count(*) as count from keyv where key like '" prefix ":%'"))
+         c (-> q first (aget "count"))]
+        c))
+
 (defn main! []
   (log n "Updating db from json files.")
-  (plet [result (update-db-from-data-dir)]
+  (plet [result (update-db-from-data-dir)
+         db (client)
+         pins (count-pins db "pins")
+         posted (count-pins db "posted")]
+        (log n "Pins remaining:" pins)
+        (log n "Pins posted:" posted)
         (log n "Done.")))
 
 (main!)
