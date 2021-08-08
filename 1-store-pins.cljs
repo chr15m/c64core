@@ -2,7 +2,9 @@
   (:require
     ["fs" :as fs]
     ["crypto" :as crypto]
-    [common :refer [kv plet get-pin-image]]))
+    [common :refer [log kv plet get-pin-image]]))
+
+(def n "1-store-pins.cljs:")
 
 ; https://api.pinterest.com/v3/pidgets/users/chrismgamedraw/pins/
 ; https://api.pinterest.com/v3/pidgets/boards/chrismgamedraw/retro-computing/pins/
@@ -31,10 +33,10 @@
         (.get db pin-hash)
         (.then (fn [data]
                  (when (nil? data)
-                   (print "adding pin:")
-                   (print "\tsrc: " (aget pin "link"))
-                   (print "\tembed: " url)
-                   (print "\thash: " pin-hash)
+                   (log n "adding pin:")
+                   (log n "\tsrc: " (aget pin "link"))
+                   (log n "\tembed: " url)
+                   (log n "\thash: " pin-hash)
                    (.set db pin-hash #js {:pin pin :added (js/Date.)}))))))))
 
 (defn update-db-from-data-dir []
@@ -45,16 +47,16 @@
           (to-array
             (map
               (fn [f]
-                (print f)
+                (log n "file =" f)
                 (let [pins (read-pins-files "data" f)
                       promises (map #(<p-add-pin-to-database db %) pins)]
-                  (print "Pin count:" (aget pins "length"))
+                  (log n "Pin count =" (aget pins "length"))
                   (.all js/Promise (to-array promises))))
               files)))))
 
 (defn main! []
-  (print "Updating db from json files.")
+  (log n "Updating db from json files.")
   (plet [result (update-db-from-data-dir)]
-        (print "Done.")))
+        (log n "Done.")))
 
 (main!)

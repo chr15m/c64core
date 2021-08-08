@@ -32,3 +32,13 @@
         (aget embed "src")
         (-> (aget pin "images" "564x" "url") (.replace "564x" "originals"))))
     (catch :default e)))
+
+(defn now []
+  (-> (js/Date.)
+      (.toISOString)
+      (.split ".")
+      first
+      (.replace "T" " ")))
+
+(defn log [& args]
+  (apply print (conj args (now))))
