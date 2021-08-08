@@ -11,5 +11,4 @@ Set the following environment variables:
  * `TWITTER_API_ACCESS_TOKEN=...`
  * `TWITTER_API_ACCESS_SECRET=...`
  * `PINTEREST_BOARD=.../...`
- * `LIVE=1`
 
