@@ -42,3 +42,7 @@
 
 (defn log [& args]
   (apply print (conj args (now))))
+
+(defn bail [msg]
+  (js/console.error msg)
+  (js/process.exit 1))
