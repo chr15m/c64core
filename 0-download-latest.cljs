@@ -1,11 +1,12 @@
 (ns dl
   (:require
+    [nbb.core :refer [*file*]]
     ["node-fetch" :as fetch]
     ["fs" :as fs]
     ["mkdirp" :as mkdirp]
     [common :refer [log env bail]]))
 
-(def n "0-download-latest.cljs:")
+(log *file* "Hello.")
 
 (def board (or (env "PINTEREST_BOARD") (bail "PINTEREST_BOARD is not set.")))
 
@@ -13,11 +14,11 @@
 
 (mkdirp "data")
 
-(log n "Starting download.")
+(log *file* "Starting download.")
 
 (-> (fetch fresh-pins-url)
     (.then #(.json %))
     (.then (fn [json]
       (fs/writeFileSync "data/latest.json" (js/JSON.stringify json nil 2))
-      (log n "Done."))))
+      (log *file* "Done."))))
 

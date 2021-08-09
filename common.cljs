@@ -1,5 +1,6 @@
 (ns common
-  (:require ["keyv" :as Keyv]))
+  (:require ["keyv" :as Keyv]
+            ["path" :refer [basename]]))
 
 (defn env [k & [default]]
   (or (aget js/process.env k) default))
@@ -40,8 +41,8 @@
       first
       (.replace "T" " ")))
 
-(defn log [& args]
-  (apply print (conj args (now))))
+(defn log [file-path & args]
+  (apply print (conj (conj args (str (basename file-path) ":")) (now))))
 
 (defn bail [msg]
   (js/console.error msg)

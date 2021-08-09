@@ -1,5 +1,6 @@
 (ns robot.core
   (:require
+    [nbb.core :refer [*file*]]
     ["fs" :as fs]
     ["crypto" :as crypto]
     [common :refer [log kv client plet get-pin-image]]))
@@ -27,10 +28,10 @@
         (.get db pin-hash)
         (.then (fn [data]
                  (when (nil? data)
-                   (log n "adding pin:")
-                   (log n "\tsrc: " (aget pin "link"))
-                   (log n "\tembed: " url)
-                   (log n "\thash: " pin-hash)
+                   (log *file* "adding pin:")
+                   (log *file* "\tsrc: " (aget pin "link"))
+                   (log *file* "\tembed: " url)
+                   (log *file* "\thash: " pin-hash)
                    (.set db pin-hash #js {:pin pin :added (js/Date.)}))))))))
 
 (defn update-db-from-data-dir []
@@ -41,10 +42,10 @@
           (to-array
             (map
               (fn [f]
-                (log n "file =" f)
+                (log *file* "file =" f)
                 (let [pins (read-pins-files "data" f)
                       promises (map #(<p-add-pin-to-database db %) pins)]
-                  (log n "Pin count =" (aget pins "length"))
+                  (log *file* "Pin count =" (aget pins "length"))
                   (.all js/Promise (to-array promises))))
               files)))))
 
@@ -54,13 +55,13 @@
         c))
 
 (defn main! []
-  (log n "Updating db from json files.")
+  (log *file* "Updating db from json files.")
   (plet [result (update-db-from-data-dir)
          db (client)
          pins (count-pins db "pins")
          posted (count-pins db "posted")]
-        (log n "Pins remaining:" pins)
-        (log n "Pins posted:" posted)
-        (log n "Done.")))
+        (log *file* "Pins remaining:" pins)
+        (log *file* "Pins posted:" posted)
+        (log *file* "Done.")))
 
 (main!)
