@@ -6,8 +6,6 @@
     ["twitter-api-v2/dist" :refer [TwitterApi]]
     [common :refer [log bail plet env client kv get-pin-image]]))
 
-(def n "2-post-random.cljs:")
-
 (def tw-keys {:appKey (env "TWITTER_API_APP_KEY")
               :appSecret (env "TWITTER_API_APP_SECRET")
               :accessToken (env "TWITTER_API_ACCESS_TOKEN")

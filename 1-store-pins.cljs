@@ -5,8 +5,6 @@
     ["crypto" :as crypto]
     [common :refer [log kv client plet get-pin-image]]))
 
-(def n "1-store-pins.cljs:")
-
 (defn hash-str [s]
   (-> (crypto/createHash "sha256") (.update s) (.digest "hex")))
 
