@@ -52,7 +52,8 @@
          pin-image (get-pin-image pin-data)
          pin-link (aget pin-data "link")
          ext (-> (extname pin-image) (.replace "." ""))
-         tweet-text (if (empty? pin-link) "" (str "src: " pin-link))
+         tweet-text (str (if (empty? pin-link) "" (str "src: " pin-link))
+                         "\n#retrocomputing #aesthetic")
 
          _ (log n "First fetch.")
          res (fetch pin-image)
