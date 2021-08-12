@@ -48,7 +48,7 @@
          tw (TwitterApi. (clj->js tw-keys))
          api (aget tw "v1")
          ext (-> (extname pin-image) (.replace "." ""))
-         tweet-text (str "src: " pin-link)
+         tweet-text (if (empty? pin-link) "" (str "src: " pin-link))
 
          _ (log n "Twitter uploadMedia.")
          media-id (when live (.uploadMedia api buffer (clj->js {:type ext})))
