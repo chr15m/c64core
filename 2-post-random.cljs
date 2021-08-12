@@ -11,9 +11,10 @@
               :accessToken (env "TWITTER_API_ACCESS_TOKEN")
               :accessSecret (env "TWITTER_API_ACCESS_SECRET")})
 
-(def live (env "LIVE"))
+(def min-tweet-gap-hours 5)
+(def pause-random-hours 24)
 
-(print live)
+(def live (env "LIVE"))
 
 (def n *file*)
 
@@ -22,11 +23,25 @@
     (let [n (-> k name (.replace ":" "") (.replace #"([A-Z])" "_$1") .toUpperCase)]
     (bail (str "TWITTER_API_" n " is not set")))))
 
-; TODO: check when the last tweet was and wait min-hours
-
 (defn main! []
   (log *file* "main!")
-  (plet [db (client)
+  (plet [_ (log n "Set up Twitter API.")
+         tw (TwitterApi. (clj->js tw-keys))
+         api (aget tw "v1")
+
+         user (.currentUser tw)
+         user-id (aget user "id_str")
+         timeline (.get api "statuses/user_timeline.json" (clj->js {:user_id user-id}))
+         latest-tweet (first timeline)
+         latest-tweet-time (js/Date. (aget latest-tweet "created_at"))
+         now (js/Date.)
+         hours-since-last (/ (- now latest-tweet-time) 1000 60 60)
+         _ (log n "Latest Tweet was" (int hours-since-last) "hours ago.")
+         _ (when (< hours-since-last min-tweet-gap-hours)
+             (log n "Min of" min-tweet-gap-hours "hours have not passed.")
+             (bail "Exit."))
+
+         db (client)
          pins (kv "pins")
          posted (kv "posted")
          _ (log n "Running query.")
@@ -36,6 +51,9 @@
          pin-data (-> (aget pin "value") (js/JSON.parse) (aget "value") (aget "pin"))
          pin-image (get-pin-image pin-data)
          pin-link (aget pin-data "link")
+         ext (-> (extname pin-image) (.replace "." ""))
+         tweet-text (if (empty? pin-link) "" (str "src: " pin-link))
+
          _ (log n "First fetch.")
          res (fetch pin-image)
          pin-image (if (aget res "ok")
@@ -44,11 +62,6 @@
          _ (log n "Second fetch.")
          res (fetch pin-image)
          buffer (.buffer res)
-         _ (log n "Twitter API.")
-         tw (TwitterApi. (clj->js tw-keys))
-         api (aget tw "v1")
-         ext (-> (extname pin-image) (.replace "." ""))
-         tweet-text (if (empty? pin-link) "" (str "src: " pin-link))
 
          _ (log n "Twitter uploadMedia.")
          media-id (when live (.uploadMedia api buffer (clj->js {:type ext})))
@@ -58,18 +71,18 @@
          update-posted (.set posted pin-hash (clj->js {:tweet tweet :pin pin-data :img pin-image :link pin-link}))
          update-pins (.delete pins pin-hash)]
 
-        (log n "Posted")
+        (log n "Posted and updated.")
         (log n "Hash:" pin-hash)
-        (log n pin-image)
-        (log n pin-link)
-        (log n (aget res "ok"))
+        (log n "Image:" pin-image)
+        (log n "Link:" pin-link)
+        (log n "Done, now waiting.")
         ;(print "Tweet:" tweet)
         ;(print pin-data)
-        (print)))
+        ))
 
 (main!)
 
-(let [wait-ms (* (js/Math.random) 16 60 60 1000)
+(let [wait-ms (* (js/Math.random) pause-random-hours 60 60 1000)
       wait-hrs (/ wait-ms (* 1000 60 60))]
   (log *file* "Will wait" (js/Math.round wait-hrs) "hours to re-run.")
   (js/setTimeout
