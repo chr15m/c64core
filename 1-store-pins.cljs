@@ -1,9 +1,9 @@
 (ns robot.core
   (:require
-    [nbb.core :refer [*file*]]
+    ["crypto$default" :as crypto]
     ["fs" :as fs]
-    ["crypto" :as crypto]
-    [common :refer [log kv client plet get-pin-image]]))
+    [common :refer [log kv client plet get-pin-image]]
+    [nbb.core :refer [*file*]]))
 
 (defn hash-str [s]
   (-> (crypto/createHash "sha256") (.update s) (.digest "hex")))
