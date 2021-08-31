@@ -1,10 +1,10 @@
 (ns dl
   (:require
-    [nbb.core :refer [*file*]]
-    ["node-fetch" :as fetch]
     ["fs" :as fs]
-    ["mkdirp" :as mkdirp]
-    [common :refer [log env bail]]))
+    ["mkdirp$default" :as mkdirp]
+    ["node-fetch$default" :as fetch]
+    [common :refer [log env bail]]
+    [nbb.core :refer [*file*]]))
 
 (log *file* "Hello.")
 

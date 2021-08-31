@@ -1,5 +1,5 @@
 (ns common
-  (:require ["keyv" :as Keyv]
+  (:require ["keyv$default" :as Keyv]
             ["path" :refer [basename]]))
 
 (defn env [k & [default]]

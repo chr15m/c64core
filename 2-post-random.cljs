@@ -1,10 +1,10 @@
 (ns post
   (:require
-    [nbb.core :refer [*file*]]
+    ["node-fetch$default" :as fetch]
     ["path" :refer [extname]]
-    ["node-fetch" :as fetch]
-    ["twitter-api-v2/dist" :refer [TwitterApi]]
-    [common :refer [log bail plet env client kv get-pin-image]]))
+    ["twitter-api-v2/dist$default" :refer [TwitterApi]]
+    [common :refer [log bail plet env client kv get-pin-image]]
+    [nbb.core :refer [*file*]]))
 
 (def tw-keys {:appKey (env "TWITTER_API_APP_KEY")
               :appSecret (env "TWITTER_API_APP_SECRET")
