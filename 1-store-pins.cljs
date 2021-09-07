@@ -19,13 +19,15 @@
 
 (defn fetch-fresh-json-data [])
 
-(defn <p-add-pin-to-database [db pin]
+(defn <p-add-pin-to-database [db db-posted pin]
   (when-let [url (get-pin-image pin)]
-    (let [pin-hash (hash-str url)]
+    (let [pin-hash (hash-str url)
+          in-db (.get db pin-hash)
+          in-posted (.get db-posted pin-hash)]
       (->
-        (.get db pin-hash)
-        (.then (fn [data]
-                 (when (nil? data)
+        (.all js/Promise (to-array [in-db in-posted]))
+        (.then (fn [[in-db-result in-posted-result]]
+                 (when (and (nil? in-db-result) (nil? in-posted-result))
                    (log *file* "adding pin:")
                    (log *file* "\tsrc: " (aget pin "link"))
                    (log *file* "\tembed: " url)
@@ -34,6 +36,7 @@
 
 (defn update-db-from-data-dir []
   (let [db (kv "pins")
+        db-posted (kv "posted")
         files (fs/readdirSync "data")
         files (filter #(.endsWith % ".json") files)]
     (.all js/Promise
@@ -42,7 +45,7 @@
               (fn [f]
                 (log *file* "file =" f)
                 (let [pins (read-pins-files "data" f)
-                      promises (map #(<p-add-pin-to-database db %) pins)]
+                      promises (map #(<p-add-pin-to-database db db-posted %) pins)]
                   (log *file* "Pin count =" (aget pins "length"))
                   (.all js/Promise (to-array promises))))
               files)))))
