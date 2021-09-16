@@ -3,6 +3,7 @@
     ["crypto$default" :as crypto]
     ["fs" :as fs]
     [common :refer [log kv client plet get-pin-image]]
+    [mail :refer [transport send-mail]]
     [nbb.core :refer [*file*]]))
 
 (defn hash-str [s]
@@ -63,6 +64,12 @@
          posted (count-pins db "posted")]
         (log *file* "Pins remaining:" pins)
         (log *file* "Pins posted:" posted)
-        (log *file* "Done.")))
+        (log *file* "Done.")
+        (if (< pins 400)
+          (plet [mail (transport)
+                 sent (send-mail t
+                                 (env "EMAIL_NOTIFY_ADDRESS") (env "EMAIL_NOTIFY_ADDRESS")
+                                 "Update" "" "hello, this is a test mail.")]
+                (log *file* "Not enough pins. Sent warning notification.")))))
 
 (main!)

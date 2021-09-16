@@ -11,4 +11,6 @@ Set the following environment variables:
  * `TWITTER_API_ACCESS_TOKEN=...`
  * `TWITTER_API_ACCESS_SECRET=...`
  * `PINTEREST_BOARD=.../...`
+ * `SMTP_SERVER=smtps://...`
+ * `EMAIL_NOTIFY_ADDRESS=my@myserver.com`
 
