@@ -67,7 +67,7 @@
         (log *file* "Done.")
         (if (< pins 400)
           (plet [mail (transport)
-                 sent (send-mail t
+                 sent (send-mail mail
                                  (env "EMAIL_NOTIFY_ADDRESS") (env "EMAIL_NOTIFY_ADDRESS")
                                  "Update" "" "hello, this is a test mail.")]
                 (log *file* "Not enough pins. Sent warning notification.")))))
